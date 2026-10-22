@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthGuard AI - Local Health Triage & Resource Finder</title>
+    <!-- Tailwind CSS for clean, modern styling instantly -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="bg-teal-700 text-white shadow-md py-4 px-6">
+        <div class="max-w-3xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wide">HealthGuard AI</h1>
+            <span class="text-xs bg-teal-800 px-3 py-1 rounded-full uppercase tracking-wider">Neighborhood Hacks MVP</span>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-3xl w-full mx-auto p-6 flex-grow">
+        
+        <!-- Intro / Problem Statement Context -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6">
+            <h2 class="text-lg font-semibold text-slate-900 mb-2">Instant Preliminary Health Guidance</h2>
+            <p class="text-slate-600 text-sm leading-relaxed">
+                Describe your symptoms below to receive structured preliminary advice, safety warnings, and directions to verified local healthcare resources.
+            </p>
+        </div>
+
+        <!-- Input Box Section -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6">
+            <label for="symptomInput" class="block text-sm font-medium text-slate-700 mb-2">What symptoms are you experiencing?</label>
+            <textarea id="symptomInput" rows="3" class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm" placeholder="e.g., Mild fever, headache, and fatigue for two days..."></textarea>
+            
+            <button onclick="analyzeSymptoms()" id="submitBtn" class="mt-4 w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-3 rounded-xl transition duration-200 text-sm shadow-sm">
+                Check Symptoms & Resources
+            </button>
+        </div>
+
+        <!-- Results Section (Hidden by default until clicked) -->
+        <div id="resultsSection" class="hidden space-y-6">
+            
+            <!-- AI Guidance Box -->
+            <div class="bg-teal-50 border border-teal-100 p-6 rounded-2xl shadow-sm">
+                <h3 class="text-teal-900 font-semibold mb-2 flex items-center gap-2">
+                    <span>💡</span> Preliminary Guidance & Safety Triage
+                </h3>
+                <div id="aiOutputText" class="text-slate-700 text-sm leading-relaxed space-y-2">
+                    <!-- Dynamic output goes here -->
+                </div>
+            </div>
+
+            <!-- Verified Local Resources Box -->
+            <div class="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm">
+                <h3 class="text-slate-900 font-semibold mb-3 flex items-center gap-2">
+                    <span>🏥</span> Verified Local Care & Resources
+                </h3>
+                <ul class="space-y-3 text-sm text-slate-600">
+                    <li class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex justify-between items-center">
+                        <div>
+                            <strong class="text-slate-800 block">Community Primary Health Clinic</strong>
+                            <span class="text-xs text-slate-500">Open 24/7 • 1.2 km away</span>
+                        </div>
+                        <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded-md font-medium">Verified Safe</span>
+                    </li>
+                    <li class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex justify-between items-center">
+                        <div>
+                            <strong class="text-slate-800 block">Accredited Regional Pharmacy Desk</strong>
+                            <span class="text-xs text-slate-500">Verified authentic drug supply</span>
+                        </div>
+                        <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded-md font-medium">Verified Safe</span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-100 py-4 text-center text-xs text-slate-400">
+        HealthGuard AI Prototype • Built for Neighborhood Hacks
+    </footer>
+
+    <!-- Prototype Simulation Script -->
+    <script>
+        function analyzeSymptoms() {
+            const input = document.getElementById('symptomInput').value.trim();
+            const resultsSection = document.getElementById('resultsSection');
+            const outputText = document.getElementById('aiOutputText');
+
+            if (!input) {
+                alert('Please enter your symptoms first.');
+                return;
+            }
+
+            // Show results container
+            resultsSection.classList.remove('hidden');
+
+            // Simulated response logic for prototype demo video
+            outputText.innerHTML = `
+                <p><strong>Analysis for:</strong> "${input}"</p>
+                <p><strong>Recommended Actions:</strong> Rest adequately, stay hydrated, and monitor your temperature.</p>
+                <p class="text-amber-700 bg-amber-50 p-3 rounded-xl border border-amber-200 mt-2"><strong>Safety Warning:</strong> If symptoms persist past 48 hours or worsen significantly, please visit the verified community clinic listed below immediately. Avoid unverified street remedies.</p>
+            `;
+            
+            // Scroll down smoothly to results
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
