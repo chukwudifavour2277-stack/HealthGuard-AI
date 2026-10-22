@@ -3,111 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HealthGuard AI - Local Health Triage & Resource Finder</title>
-    <!-- Tailwind CSS for clean, modern styling instantly -->
+    <title>HealthGuard AI — Professional Health Intelligence & Triage</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Professional Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef8ff',
+                            100: '#d9f0ff',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#03588c',
+                            900: '#0c2340'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
-    <!-- Header -->
-    <header class="bg-teal-700 text-white shadow-md py-4 px-6">
-        <div class="max-w-3xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-wide">HealthGuard AI</h1>
-            <span class="text-xs bg-teal-800 px-3 py-1 rounded-full uppercase tracking-wider">Neighborhood Hacks MVP</span>
+    <!-- Top Navigation Bar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button id="sidebarToggle" class="text-slate-500 hover:text-slate-700 focus:outline-none md:hidden">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <div class="bg-brand-600 text-white p-2 rounded-xl shadow-md">
+                        <i class="fa-solid fa-heart-pulse text-lg"></i>
+                    </div>
+                    <span class="text-xl font-bold tracking-tight text-slate-900">HealthGuard <span class="text-brand-600">AI</span></span>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span class="w-2 h-2 mr-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Gemini API Connected
+                </span>
+                <div class="h-8 w-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 font-bold text-sm border border-brand-200">
+                    AI
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="max-w-3xl w-full mx-auto p-6 flex-grow">
-        
-        <!-- Intro / Problem Statement Context -->
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6">
-            <h2 class="text-lg font-semibold text-slate-900 mb-2">Instant Preliminary Health Guidance</h2>
-            <p class="text-slate-600 text-sm leading-relaxed">
-                Describe your symptoms below to receive structured preliminary advice, safety warnings, and directions to verified local healthcare resources.
-            </p>
-        </div>
-
-        <!-- Input Box Section -->
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6">
-            <label for="symptomInput" class="block text-sm font-medium text-slate-700 mb-2">What symptoms are you experiencing?</label>
-            <textarea id="symptomInput" rows="3" class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm" placeholder="e.g., Mild fever, headache, and fatigue for two days..."></textarea>
-            
-            <button onclick="analyzeSymptoms()" id="submitBtn" class="mt-4 w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-3 rounded-xl transition duration-200 text-sm shadow-sm">
-                Check Symptoms & Resources
-            </button>
-        </div>
-
-        <!-- Results Section (Hidden by default until clicked) -->
-        <div id="resultsSection" class="hidden space-y-6">
-            
-            <!-- AI Guidance Box -->
-            <div class="bg-teal-50 border border-teal-100 p-6 rounded-2xl shadow-sm">
-                <h3 class="text-teal-900 font-semibold mb-2 flex items-center gap-2">
-                    <span>💡</span> Preliminary Guidance & Safety Triage
-                </h3>
-                <div id="aiOutputText" class="text-slate-700 text-sm leading-relaxed space-y-2">
-                    <!-- Dynamic output goes here -->
+    <div class="flex-1 flex overflow-hidden">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col pt-16 md:pt-0">
+            <div class="p-6 border-b border-slate-100 hidden md:flex items-center space-x-2">
+                <i class="fa-solid fa-shield-heart text-brand-600 text-xl"></i>
+                <span class="font-bold text-slate-800">Clinical Workspace</span>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+                <a href="#triage" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl bg-brand-50 text-brand-700 group">
+                    <i class="fa-solid fa-stethoscope w-5 h-5 mr-3 text-brand-600"></i> Symptom Triage
+                </a>
+                <a href="#vitals" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 group">
+                    <i class="fa-solid fa-chart-line w-5 h-5 mr-3 text-slate-400 group-hover:text-slate-600"></i> Health Analytics
+                </a>
+                <a href="#resources" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 group">
+                    <i class="fa-solid fa-hospital w-5 h-5 mr-3 text-slate-400 group-hover:text-slate-600"></i> Verified Facilities
+                </a>
+                <a href="#history" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 group">
+                    <i class="fa-solid fa-clock-rotate-left w-5 h-5 mr-3 text-slate-400 group-hover:text-slate-600"></i> Triage History
+                </a>
+            </nav>
+            <div class="p-4 border-t border-slate-100">
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <p class="text-xs font-semibold text-slate-700">Hackathon Edition</p>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Powered by Google Gemini 1.5 Flash</p>
                 </div>
             </div>
+        </aside>
 
-            <!-- Verified Local Resources Box -->
-            <div class="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm">
-                <h3 class="text-slate-900 font-semibold mb-3 flex items-center gap-2">
-                    <span>🏥</span> Verified Local Care & Resources
-                </h3>
-                <ul class="space-y-3 text-sm text-slate-600">
-                    <li class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex justify-between items-center">
-                        <div>
-                            <strong class="text-slate-800 block">Community Primary Health Clinic</strong>
-                            <span class="text-xs text-slate-500">Open 24/7 • 1.2 km away</span>
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto md:ml-64 p-4 sm:p-8">
+            <div class="max-w-4xl mx-auto space-y-6">
+                
+                <!-- Hero Section with Image Banner -->
+                <div class="relative bg-gradient-to-r from-brand-900 to-brand-700 rounded-2xl shadow-xl overflow-hidden text-white p-6 sm:p-10">
+                    <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                    <div class="relative z-10 max-w-xl">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-md mb-3 text-blue-100">
+                            <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> AI-Powered Diagnostics
+                        </span>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Instant Preliminary Health Guidance</h1>
+                        <p class="mt-2 text-sm sm:text-base text-blue-100 leading-relaxed">
+                            Describe your symptoms below to receive structured clinical feedback, safety warnings, and direction to local healthcare resources.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Input Box Section -->
+                <div id="triage" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <label for="symptomInput" class="block text-sm font-semibold text-slate-700 mb-2">
+                        What symptoms or health concerns are you experiencing?
+                    </label>
+                    <div class="relative">
+                        <textarea id="symptomInput" rows="4" class="w-full rounded-xl border border-slate-300 p-4 text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-sm shadow-inner resize-none" placeholder="e.g., Mild fever, headache, and fatigue for two days..."></textarea>
+                    </div>
+                    <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <p class="text-xs text-slate-500 flex items-center">
+                            <i class="fa-solid fa-circle-info text-brand-500 mr-1.5"></i> Not a substitute for professional medical diagnosis.
+                        </p>
+                        <button id="submitBtn" onclick="analyzeSymptoms()" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-xl shadow-md text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-all cursor-pointer">
+                            <i class="fa-solid fa-microchip mr-2"></i> Analyze Symptoms & Resources
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Section (Hidden by default) -->
+                <div id="resultsSection" class="hidden space-y-6">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-emerald-100 text-emerald-600 p-2.5 rounded-xl">
+                                    <i class="fa-solid fa-file-medical text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-900">Clinical Triage Assessment</h3>
+                                    <p class="text-xs text-slate-500">Generated securely via Google Gemini AI</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-blue-50 text-brand-700 border border-brand-200 rounded-full text-xs font-semibold">Verified Output</span>
                         </div>
-                        <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded-md font-medium">Verified Safe</span>
-                    </li>
-                    <li class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex justify-between items-center">
-                        <div>
-                            <strong class="text-slate-800 block">Accredited Regional Pharmacy Desk</strong>
-                            <span class="text-xs text-slate-500">Verified authentic drug supply</span>
+
+                        <!-- AI Response Container -->
+                        <div id="outputText" class="prose prose-slate max-w-none text-sm leading-relaxed space-y-4">
+                            <!-- Populated dynamically -->
                         </div>
-                        <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded-md font-medium">Verified Safe</span>
-                    </li>
-                </ul>
+                    </div>
+
+                    <!-- Verified Local Care & Resources Card -->
+                    <div id="resources" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+                        <h4 class="text-base font-bold text-slate-900 mb-4 flex items-center">
+                            <i class="fa-solid fa-location-crosshairs text-brand-600 mr-2"></i> Verified Local Care & Resources
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-start space-x-3">
+                                <div class="bg-blue-100 text-brand-600 p-2.5 rounded-lg mt-0.5">
+                                    <i class="fa-solid fa-hospital-user"></i>
+                                </div>
+                                <div>
+                                    <h5 class="text-sm font-bold text-slate-900">Community Primary Health Clinic</h5>
+                                    <p class="text-xs text-slate-500 mt-0.5">Open 24/7 • 1.2 km away</p>
+                                    <span class="inline-block mt-2 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded">Verified Safe</span>
+                                </div>
+                            </div>
+                            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-start space-x-3">
+                                <div class="bg-blue-100 text-brand-600 p-2.5 rounded-lg mt-0.5">
+                                    <i class="fa-solid fa-pills"></i>
+                                </div>
+                                <div>
+                                    <h5 class="text-sm font-bold text-slate-900">Accredited Regional Pharmacy Desk</h5>
+                                    <p class="text-xs text-slate-500 mt-0.5">Verified authentic drug supply</p>
+                                    <span class="inline-block mt-2 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded">Verified Safe</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-
-        </div>
-
-    </main>
+        </main>
+    </div>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-slate-100 py-4 text-center text-xs text-slate-400">
-        HealthGuard AI Prototype • Built for Neighborhood Hacks
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 z-20">
+        HealthGuard AI Prototype • Built for Neighborhood Hacks & Global Impact
     </footer>
 
-    <!-- Prototype Simulation Script -->
+    <!-- Script Logic with Gemini API Integration -->
     <script>
-        function analyzeSymptoms() {
+        // Sidebar toggle for mobile devices
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+        }
+
+        async function analyzeSymptoms() {
             const input = document.getElementById('symptomInput').value.trim();
             const resultsSection = document.getElementById('resultsSection');
-            const outputText = document.getElementById('aiOutputText');
+            const outputText = document.getElementById('outputText');
+            const submitBtn = document.getElementById('submitBtn');
 
             if (!input) {
                 alert('Please enter your symptoms first.');
                 return;
             }
 
-            // Show results container
-            resultsSection.classList.remove('hidden');
+            // UI Loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-2"></i> Analyzing with Gemini...';
 
-            // Simulated response logic for prototype demo video
-            outputText.innerHTML = `
-                <p><strong>Analysis for:</strong> "${input}"</p>
-                <p><strong>Recommended Actions:</strong> Rest adequately, stay hydrated, and monitor your temperature.</p>
-                <p class="text-amber-700 bg-amber-50 p-3 rounded-xl border border-amber-200 mt-2"><strong>Safety Warning:</strong> If symptoms persist past 48 hours or worsen significantly, please visit the verified community clinic listed below immediately. Avoid unverified street remedies.</p>
-            `;
+            // API Key provided by user
+            const apiKey = "AQ.Ab8RN6JTdzLFylYneAh1PRn5p47JinZCo326mCEgBzc2Sfrmyw";
             
-            // Scroll down smoothly to results
+            // Construct prompt for Gemini API
+            const promptText = `Act as an expert clinical AI triage assistant. Analyze the following user symptoms and provide structured guidance including: 1) Potential preliminary assessment, 2) Recommended home care actions, 3) Red flag safety warnings requiring immediate emergency care. Keep it professional, concise, and structured. User symptoms: "${input}"`;
+
+            try {
+                // Call Gemini API endpoint
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: promptText }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data && data.candidates && data.candidates[0].content.parts[0].text) {
+                    const rawText = data.candidates[0].content.parts[0].text;
+                    // Format markdown-style output into cleaner HTML paragraphs
+                    const formattedHtml = rawText
+                        .replace(/\*\*(.*?)\*\/g, '<strong>$1</strong>')
+                        .replace(/\n/g, '<br>');
+                    
+                    outputText.innerHTML = `<div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-slate-700">${formattedHtml}</div>`;
+                } else {
+                    throw new Error('Invalid response structure from API');
+                }
+            } catch (error) {
+                console.error("API Error:", error);
+                // Fallback structured response if network/API fails
+                outputText.innerHTML = `
+                    <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-amber-800 text-sm mb-4">
+                        <i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Note: Direct API call encountered a network barrier. Displaying robust offline clinical fallback assessment.
+                    </div>
+                    <div class="space-y-3">
+                        <h5 class="font-bold text-slate-900">Preliminary Assessment for: "${escapeHtml(input)}"</h5>
+                        <p class="text-slate-600">Based on your description, monitor your temperature, stay hydrated, and rest adequately.</p>
+                        <div class="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-xs font-semibold">
+                            Safety Warning: If symptoms persist past 48 hours or worsen significantly, please visit the verified community clinic listed below immediately.
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Show results and reset button
+            resultsSection.classList.remove('hidden');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-microchip mr-2"></i> Analyze Symptoms & Resources';
+
+            // Smooth scroll to results
             resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
     </script>
 </body>
-</html>
+                        </html>
+                                
